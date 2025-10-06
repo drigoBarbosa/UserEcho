@@ -1,4 +1,4 @@
-# RabbitNotify
+# UserEcho
 
 Projeto de estudo em **arquitetura de microserviços com mensageria assíncrona**, desenvolvido com **Spring Boot (Java 17)** e **RabbitMQ**.  
 
