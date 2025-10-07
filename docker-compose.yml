@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  # ======================
+  # Serviço de mensageria
+  # ======================
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"      # Porta de conexão (para as apps)
+      - "15672:15672"    # Painel web http://localhost:15672
+    networks:
+      - micro-network
+
+  # =====================
+  # Banco do UserService
+  # =====================
+  postgres-user:
+    image: postgres:16
+    container_name: postgres-user
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: userpass
+      POSTGRES_DB: userdb
+    ports:
+      - "5433:5432"  # Mapeia porta do container → porta local
+    volumes:
+      - pgdata_user:/var/lib/postgresql/data
+    networks:
+      - micro-network
+
+  # =====================
+  # Banco do EmailService
+  # =====================
+  postgres-email:
+    image: postgres:16
+    container_name: postgres-email
+    environment:
+      POSTGRES_USER: email
+      POSTGRES_PASSWORD: emailpass
+      POSTGRES_DB: emaildb
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata_email:/var/lib/postgresql/data
+    networks:
+      - micro-network
+
+  # =====================
+  # Microserviço UserService
+  # =====================
+  userservice:
+    build: ./UserService
+    container_name: userservice
+    depends_on:
+      - postgres-user
+      - rabbitmq
+    environment:
+      # Banco de dados
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-user:5432/userdb
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: userpass
+
+      # RabbitMQ
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+
+      # Porta da aplicação
+      SERVER_PORT: 8080
+    ports:
+      - "8081:8080"  # Porta local → container
+    networks:
+      - micro-network
+
+  # =====================
+  # Microserviço EmailService
+  # =====================
+  emailservice:
+    build: ./EmailService
+    container_name: emailservice
+    depends_on:
+      - postgres-email
+      - rabbitmq
+    environment:
+      # Banco de dados
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-email:5432/emaildb
+      SPRING_DATASOURCE_USERNAME: email
+      SPRING_DATASOURCE_PASSWORD: emailpass
+
+      # RabbitMQ
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+
+      # Porta da aplicação
+      SERVER_PORT: 8080
+    ports:
+      - "8082:8080"
+    networks:
+      - micro-network
+
+# =====================
+# Volumes persistentes
+# =====================
+volumes:
+  pgdata_user:
+  pgdata_email:
+
+# =====================
+# Rede compartilhada
+# =====================
+networks:
+  micro-network:
