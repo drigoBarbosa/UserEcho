@@ -6,11 +6,6 @@ O sistema demonstra como eventos podem ser utilizados para desacoplar serviços,
 
 ---
 
-## Arquitetura
-
-![Fluxo do Projeto](<img width="1005" height="216" alt="image" src="https://github.com/user-attachments/assets/e5486d58-1b0a-470b-8390-09967521acf8" />
-)
-
 ### Fluxo
 1. O **cliente** realiza uma requisição `POST /users`.  
 2. O **User Microservice**:
@@ -43,9 +38,8 @@ O sistema demonstra como eventos podem ser utilizados para desacoplar serviços,
 - **Spring Data JPA**  
 - **Spring AMQP (RabbitMQ)**  
 - **PostgreSQL**  
-- **SMTP (para envio de e-mails)**  
-- **Docker / Docker Compose** (para subir ambiente com RabbitMQ e banco)  
-
+- **SMTP (para envio de e-mails)**
+  
 ---
 
 ## Objetivo
