@@ -43,9 +43,8 @@ O sistema demonstra como eventos podem ser utilizados para desacoplar serviços,
 - **Spring Data JPA**  
 - **Spring AMQP (RabbitMQ)**  
 - **PostgreSQL**  
-- **SMTP (para envio de e-mails)**  
-- **Docker / Docker Compose** (para subir ambiente com RabbitMQ e banco)  
-
+- **SMTP (para envio de e-mails)**
+  
 ---
 
 ## Objetivo
