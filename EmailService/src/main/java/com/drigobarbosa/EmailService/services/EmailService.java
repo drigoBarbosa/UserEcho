@@ -24,7 +24,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    @Value(value = "${spring.email.username}")
+    @Value(value = "${spring.mail.username}")
     private String emailFrom;
 
     @Transactional
